@@ -1,0 +1,18 @@
+﻿@model UserDetailViewModel
+
+    <div class="card">
+    <div class="card-header" style="font-size:x-large">
+            Profil Bilgileri
+        </div>
+        <div class="card-body">
+            <p class="card-text"><b>Ad:</b>@Model.FirstName</p>
+            <p class="card-text"><b>Soyad:</b>@Model.LastName</p>
+            <p class="card-text"><b>EPosta:</b>@Model.Email</p>
+            <a asp-action="UserOrdersList" asp-controller="Order" asp-route-id="@Model.Id" class="btn btn-primary">Siparişlerim</a>
+
+        <a asp-action="UserFavorites" asp-controller="User" asp-route-userId="@Model.Id" class="btn btn-primary">Favorilerim</a>
+
+            <a href="/" class="btn btn-primary">Siteye Geri Dön</a>
+        </div>
+    </div>
+

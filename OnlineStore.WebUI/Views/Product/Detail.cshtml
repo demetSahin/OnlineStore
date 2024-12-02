@@ -1,0 +1,36 @@
+﻿
+<style>
+    #detail {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+
+
+
+<div class="p-5  bg-body-tertiary rounded-3">
+    <h1 class="text-body-emphasis fw-bold display-5">Online Store</h1>
+    <p class="lead text-warning fw-bold fs-4">
+        Güvenli alışverişin tek adresi
+    </p>
+    <div class="row mt-5">
+
+        <div class="col-2">
+
+            <vc:categories></vc:categories>
+
+
+        </div>
+
+
+        <div id ="detail"class="col-10" >
+         
+
+            <vc:products-detail id="@Convert.ToInt32(TempData["ProductId"])"></vc:products-detail>
+
+        </div>
+
+    </div>
+

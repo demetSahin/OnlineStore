@@ -1,0 +1,52 @@
+﻿
+@using OnlineStore.WebUI.Areas.Admin.Models
+@model List<OrderListViewModel>
+
+<div class="float-start"> <h2>Siparişler</h2> </div>
+<div style="padding-top:75px">
+
+    <table id="orderTable" class="table table-hover">
+        <thead>
+            <tr>
+                <th>Ad Soyad</th>
+                <th>Sipariş Tarihi</th>
+                <th>Adres İsmi</th>
+                <th>Adres </th>
+                <th>Şehir</th>
+                <th>İlçe</th>
+                <th>Posta Kodu</th>
+                <th>Toplam Fiyat</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Fullname</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.AddressName</td>
+                    <td>@item.Address</td>
+                    <td>@item.City</td>
+                    <td>@item.District</td>
+                    <td>@item.ZipCode</td>
+                    <td>@item.TotalPrice</td>
+                    <td>
+                        <form asp-action="Delete" asp-controller="Order" method="post">
+                            <input type="hidden" name="orderId" value="@item.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+
+                        <a asp-controller="Order" asp-action="Update" asp-route-id="@item.Id" class=" btn btn-sm btn-primary">Düzenle</a>
+                     
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            }
+    </table>
+</div>
+
+

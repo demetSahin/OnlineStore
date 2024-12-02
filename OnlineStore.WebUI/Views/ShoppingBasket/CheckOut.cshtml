@@ -1,0 +1,41 @@
+﻿
+@model ShippingDetailsViewModel
+<h2>Sipariş Bilgileri</h2>
+<input asp-for="UserId" type="hidden" />
+<form class="row g-3" method="post" asp-action="CheckOut" asp-controller="ShoppingBasket">
+    <div class="col-md-6">
+        <label for="Fullname" class="form-label required ">Ad Soyad</label>
+        <input type="text" class="form-control" asp-for="Fullname" required>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="AddressName" class="form-label required">Adres İsmi</label>
+        <input type="text" class="form-control" asp-for="AddressName" required>
+    </div>
+    <div class="col-12">
+        <label asp-for="Address" class="form-label required">Address</label>
+        <input type="text" class="form-control" placeholder="1234 Main St" asp-for="Address" required>
+    </div>
+   
+    <div class="col-md-6">
+        <label asp-for="City" class="form-label required">City</label>
+        <input type="text" class="form-control" asp-for="City" required>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="District" class="form-label required">Semt</label>
+        <input type="text" class="form-control" asp-for="District" required>
+    </div>
+
+   
+    <div class="col-md-2">
+        <label asp-for="ZipCode" class="form-label required">Posta Kodu</label>
+        <input type="text" class="form-control" asp-for="ZipCode" required>
+    </div>
+   
+    <div class="text-danger" asp-validation-summary="All">
+    </div>
+   
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Alışverişi Tamamla</button>
+    </div>
+</form>

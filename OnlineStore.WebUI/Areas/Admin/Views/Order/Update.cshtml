@@ -1,0 +1,83 @@
+﻿@using OnlineStore.WebUI.Areas.Admin.Models
+@model OrderUpdateViewModel
+
+<div class="row">
+
+    <div class="col-8 offset-2">
+
+        <div class="card" style="border: solid 2px">
+
+            <div class="card-header fw-bold fs-5">
+
+                <span>Ürün Güncelleme Formu</span>
+
+            </div>
+
+            <div class="card-body">
+
+                <form method="post" asp-controller="Order" asp-action="Update">
+                    <input asp-for="Id" type="hidden" name="orderId" value="@Model.Id" />
+
+
+
+                    <div class="mb-2">
+                        <label asp-for="CreatedDate"></label>
+                        <input type="text" asp-for="CreatedDate" class="form-control" />
+
+                    </div>
+
+                    <div class="mb-2">
+                        <label asp-for="Fullname"></label>
+                        <input type="text" asp-for="Fullname" class="form-control" />
+
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="AddressName"></label>
+                        <input type="text" asp-for="AddressName" class="form-control" />
+
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="Address"></label>
+                        <input type="text" asp-for="Address" class="form-control" />
+
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="City"></label>
+                        <input type="text" asp-for="City" class="form-control" />
+
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="District"></label>
+                        <input type="text" asp-for="District" class="form-control" />
+
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="ZipCode"></label>
+                        <input type="text" asp-for="ZipCode" class="form-control" />
+
+                    </div>
+
+                    <div class="mb-2">
+                        <label asp-for="UserId"></label>
+                        <input type="number" asp-for="UserId" class="form-control" />
+                    </div>
+
+
+                    <div class="mb-2">
+                        <label asp-for="TotalPrice"></label>
+                        <input type="text" asp-for="TotalPrice" class="form-control" />
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3 float-end fw-bold">Ürün Güncelle</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>

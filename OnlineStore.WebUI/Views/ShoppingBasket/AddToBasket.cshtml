@@ -1,0 +1,99 @@
+﻿@model List<ShoppingBasketViewModel>
+@inject OnlineStore.DAL.Context.OnlineStoreContext db
+
+
+ <div class="container pb-5">
+     <div class="row">
+         <div class="col-md-12">
+             <h2>Alışveriş Sepeti</h2>
+             <hr />
+
+             <table class="table table-bordered">
+                 <thead>
+                     <tr>
+                        <th></th>
+                        <th>Ürün Adı</th>
+                        <th>Birim Fiyatı</th>
+                        <th></th>
+                        <th></th>
+                        
+                     </tr>
+                 </thead>
+                
+                 <tbody>
+                     
+                      @foreach (var item in Model)
+                      {
+                        
+                        if (item.UserId == User.GetId())
+                          {
+                            var product = db.Products.FirstOrDefault(x => x.Id == item.ProductId);
+                           
+                            if (product != null)
+                            {
+                              
+                                <tr>
+                                    <td><img src="~/images/products/@product.ImagePath" width="50"/></td>
+                                    <td>@product.Name</td>
+                                    <td>@product.UnitPrice</td>
+                                   <td>
+                                    <a asp-controller="ShoppingBasket" asp-action="DeleteFromBasket" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Sil</a>
+                                    </td>
+
+                                  
+                                  
+                                </tr>
+
+                                
+                               
+                            }
+                        }
+
+                       
+                      }
+
+                    
+                 </tbody>
+
+                 <tfoot>
+                     @{ decimal top = 0;
+                     
+                      foreach (var item in Model)
+                      {
+                           
+
+                        if (item.UserId == User.GetId())
+                          {
+                            var product = db.Products.FirstOrDefault(x => x.Id == item.ProductId);
+                           
+                            if (product != null)
+                            {
+                                top +=(decimal)@product.UnitPrice;
+                            }
+                        }
+                      }
+                     
+                      <tr>
+
+                            <td colspan="4"><b>Toplam Fiyat</b></td>
+                       
+                           <td>@top</td>
+                     
+                     </tr> 
+                }
+                 </tfoot>
+             </table>
+             <div class="text-center">
+             <a href="/" class="btn btn-primary mt-3 ms-3 me-3 "><i class="fa fa-angle-double-left" area-hidden="true"></i> Alışverişe Devam Et</a>
+                <a id="btnOdeme" asp-controller="ShoppingBasket" asp-action="CheckOut" class="btn btn-primary mt-3 ms-6"><i class="fa fa-check" area-hidden="true"></i>Alışverişi Tamamla</a>
+            </div>
+            
+
+         </div>
+
+
+     </div>
+
+ </div>
+
+

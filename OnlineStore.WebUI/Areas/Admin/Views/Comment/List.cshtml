@@ -1,0 +1,46 @@
+﻿@using OnlineStore.WebUI.Areas.Admin.Models
+@model List<CommentListViewModel>
+
+<div class="float-start"> <h2>Yorumlar</h2> </div>
+<div style="padding-top:75px">
+
+    <table id="orderTable" class="table table-hover">
+        <thead>
+            <tr>
+                <th>Yorum ID</th>
+                <th>Yorum Tarihi</th>
+                <th>Puanı </th>
+                <th>İçeriği</th>
+                <th>Kullanıcı ID</th>
+                <th>Urun ID</th>
+               
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.Rating</td>
+                    <td>@item.Content</td>
+                    <td>@item.UserId</td>
+                    <td>@item.ProductId</td>
+                    <td>
+                        <form asp-action="DeleteComment" asp-controller="Comment" method="post">
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            }
+    </table>
+</div>
+
+

@@ -1,0 +1,192 @@
+﻿
+@model CommentViewModel
+
+<style>
+    /* Kart tasarımı */
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        padding: 20px;
+        width: 450px;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border-radius: 6px;
+        -moz-box-shadow: 0px 0px 5px 0px rgba(212, 182, 212, 1);
+    }
+
+    /* Yorum alanı */
+    .comment-box {
+        padding: 5px;
+    }
+
+    /* Yorum metin alanı */
+    .comment-area textarea {
+        resize: none;
+        border: 1px solid #ad9f9f;
+    }
+
+    /* Form elemanlarının odaklanma durumu */
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #ffffff;
+        outline: 0;
+        box-shadow: 0 0 0 1px rgb(255, 0, 0) !important;
+    }
+
+    /* Gönder butonu */
+    .send {
+        color: #fff;
+        background-color: #ff0000;
+        border-color: #ff0000;
+    }
+
+        .send:hover {
+            color: #fff;
+            background-color: #f50202;
+            border-color: #f50202;
+        }
+
+    /* Derecelendirme (Rating) alanı */
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+
+        .rating > input {
+            display: none; /* Yıldızları gizleriz, sadece etiketleri görürüz */
+        }
+
+        .rating > label {
+            position: relative;
+            width: 30px; /* Yıldızların boyutunu ayarladık */
+            font-size: 30px; /* Yıldızların boyutunu ayarladık */
+            color: #ccc; /* Varsayılan yıldız rengi gri */
+            cursor: pointer;
+        }
+
+            .rating > label::before {
+                content: "\2605"; /* Yıldız karakteri */
+                position: absolute;
+                opacity: 0; /* Başlangıçta içi boş yıldız */
+                color: #FFD600; /* Doldurulmuş yıldızların rengi */
+            }
+
+            .rating > label:hover::before,
+            .rating > label:hover ~ label::before {
+                opacity: 1 !important; /* Üzerine gelince diğer yıldızların opaklığı artar */
+            }
+
+        .rating > input:checked ~ label::before {
+            opacity: 1; /* Tıklanan yıldız ve öncekiler dolacak */
+        }
+
+
+</style>
+
+
+<form id="commentForm" asp-action="CommentProduct" asp-controller="Product" asp-route-userId="@User.GetId()" asp-route-productId="@Model.ProductId" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ProductId" value="@Model.ProductId"/>
+    <input type="hidden" asp-for="UserId" value="@User.GetId() />
+   
+    <div class="card">
+        <div class="row">
+            <div class="col-2">
+                <img src="https://i.imgur.com/xELPaag.jpg" width="70" class="rounded-circle mt-2">
+            </div>
+            <div class="col-10">
+                <div class="comment-box ml-2">
+                    <h4>Yorum Ekle</h4>
+                    <div class="rating" id="rating">
+                        <div class="rating">
+                            <input type="radio" name="Rating" value="5" id="star5" @if (Model.Rating == 5)
+                            {
+                                <text>checked</text>
+                            }><label for="star5">☆</label>
+                            <input type="radio" name="Rating" value="4" id="star4" @if (Model.Rating == 4)
+                            {
+                                <text>checked</text>
+                            }><label for="star4">☆</label>
+                            <input type="radio" name="Rating" value="3" id="star3" @if (Model.Rating == 3)
+                            {
+                                <text>checked</text>
+                            }><label for="star3">☆</label>
+                            <input type="radio" name="Rating" value="2" id="star2" @if (Model.Rating == 2)
+                            {
+                                <text>checked</text>
+                            }><label for="star2">☆</label>
+                            <input type="radio" name="Rating" value="1" id="star1" @if (Model.Rating == 1)
+                            {
+                                <text>checked</text>
+                            }><label for="star1">☆</label>
+                        </div>
+                    </div>
+
+                    <!-- Rating alanı için hata mesajını burada göstereceğiz -->
+                    <span id="ratingError" class="text-danger" style="display:none;">Lütfen bir puan seçin.</span>
+
+                    <div class="comment-area">
+                        <textarea asp-for="Content" class="form-control" placeholder="Bir yorum yap" rows="4" required></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span> <!-- Yorum alanı için doğrulama mesajı -->
+                    </div>
+                    <div class="comment-btns mt-2">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="pull-left">
+                                    <a href="/" class="btn btn-success btn-sm">Vazgeç</a>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-success send btn-sm">Yorum Ekle<i class="fa fa-long-arrow-right ml-1"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.rating input');
+        const labels = document.querySelectorAll('.rating label');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('change', function () {
+                // Tüm yıldızları sıfırla (ilk önce hepsi boş olacak)
+                labels.forEach(label => label.classList.remove('filled'));
+
+                // Seçilen yıldız ve öncekiler dolacak
+                for (let i = 0; i <= index; i++) {
+                    labels[i].classList.add('filled');
+                }
+            });
+        });
+    });
+   
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('commentForm'); // Formu ID ile seçiyoruz
+            form.addEventListener('submit', function (event) {
+                const rating = document.querySelector('input[name="Rating"]:checked'); // Rating alanında bir seçim yapıldığını kontrol ediyoruz
+
+                if (!rating) {
+                    event.preventDefault(); // Eğer seçilmemişse, formun gönderilmesini engelliyoruz
+                    alert("Lütfen bir puan seçin."); // Kullanıcıya uyarı mesajı gösteriyoruz
+                }
+            });
+        });
+
+
+
+    
+    </script>
+        

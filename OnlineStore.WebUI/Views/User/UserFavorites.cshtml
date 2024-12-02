@@ -1,0 +1,82 @@
+﻿@model List< UserLikedProductViewModel>
+@using OnlineStore.WebUI.Areas.Admin.Models
+<h2 style="text-align: center;">Favori Ürünlerim</h2>
+<div style="padding-top:75px">
+
+    <table id="productTable" class="table table-hover">
+        <thead>
+            <tr>
+                <th style="width:150px"></th>
+                <th>Ürün Adı</th>
+                <th>Birim Fiyatı</th>
+                <th>Stok Miktarı</th>
+            
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+
+                        @if(string.IsNullOrWhiteSpace(item.ImagePath))
+                        {
+                            <a href="~/images/noImage.png"  data-title="@item.Name"><img width="140" height="120" src="~/images/noImage.png" /></a>
+                        }
+                        else
+                        {
+                            <a href="~/images/products/@item.ImagePath"  data-title="@item.Name"><img width="140" height="120" src="~/images/products/@item.ImagePath" /></a>
+                        }
+                    </td>
+
+                    <td>@item.Name</td>
+                    <td>@item.UnitPrice TL</td>
+                    <td>@item.UnitsInStock</td>
+                 
+                </tr>
+                
+            }
+
+
+        </tbody>
+
+
+    </table>
+
+
+    <a href="/" class="btn btn-primary fw-bold">Siteye Geri Dön</a>
+
+</div>
+
+
+@section Scripts{
+    
+    <script>
+
+        
+
+        var table = new DataTable('#productTable', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/tr.json',
+            },
+            pageLength:3
+        });
+
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'fitImagesInViewport': true,
+            'maxWidth' :500,
+            'maxHeight': 500
+        })
+
+
+
+    </script>
+
+
+
+
+}

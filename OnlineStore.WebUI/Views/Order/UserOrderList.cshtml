@@ -1,0 +1,77 @@
+﻿@model List<OrderViewModel>
+<div class="container pb-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Sipariş Bilgileri</h2>
+            <hr />
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Ad Soyad</th>
+                        <th>Sipariş Tarihi</th>
+                        <th>Adres İsmi</th>
+                        <th>Adres </th>
+                        <th>Şehir</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Fullname</td>
+                            <td>@item.CreatedDate</td>
+                            <td>@item.AddressName</td>
+                            <td>@item.Address</td>
+                            <td>@item.City</td>
+                            <td>@item.District</td>
+                            <td>
+                                @* <a asp-controller="ShoppingBasket" asp-action="DeleteFromBasket" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Sil</a> *@
+                            </td>
+
+
+                        </tr>
+
+
+
+
+
+                    }
+
+
+                    }
+
+
+                </tbody>
+
+                <tfoot>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td colspan="4"><b>Toplam Fiyat</b></td>
+
+                            <td>@item.TotalPrice</td>
+
+                        </tr>
+                    }
+                </tfoot>
+            </table>
+            <div class="text-center">
+                <a href="/" class="btn btn-primary mt-3 ms-3 me-3 "><i class="fa fa-angle-double-left" area-hidden="true"></i> SiteyeGeri </a>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>

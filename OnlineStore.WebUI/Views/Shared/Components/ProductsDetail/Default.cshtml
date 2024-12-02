@@ -1,0 +1,160 @@
+﻿<style>
+    /* Yıldızlar için stil */
+    .stars i {
+        color: #FFD700; /* Sarı renk */
+    }
+
+    .stars .filled {
+        color: #FFD700; /* Dolu yıldızlar için sarı */
+    }
+
+    .stars i {
+        font-size: 1.2em;
+    }
+
+    /* Yorum kutularını düzenle */
+    .comment-item {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    /* Yorumlar başlığını sarı yap */
+    .comments-title {
+        color: darkorange; /* Sarı renk */
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    /* Anonim kullanıcı ismini silikleştirmek için opacity */
+    .comment-item .anonymous {
+        opacity: 0.5;
+        font-size: small;
+    }
+
+    /* Yorumlar kısmı */
+    .comments-section {
+        margin-top: 20px; /* Yorumların card'dan biraz daha aşağıda yer alması için */
+        padding: 10px;
+        background-color: #f1f1f1; /* Arka plan rengi */
+        border-radius: 5px;
+        display: block; /* Yorumlar bölümünü blok olarak hizalayalım */
+        clear: both; /* Yorumların diğer öğelerle yan yana gelmesini engeller */
+        width: 100%; /* Genişlik 100% olarak ayarlanabilir */
+    }
+
+</style>
+
+@model ProductDetailViewModel
+@inject OnlineStore.DAL.Context.OnlineStoreContext db
+@{
+    var likes = db.ProductLikes.ToList();
+    var comments = db.Comments.ToList();
+}
+
+<div class="card mb-3 ms-3" style="max-width: 600px;">
+    <div class="row no-gutters">
+        <div class="col-md-4">
+            <img src="~/images/products/@Model.ImagePath" alt="@Model.Name">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text"><b>Açıklama: </b>@Model.Description</p>
+                <p class="card-text"><b>Ürün Fiyatı: </b>@Model.UnitPrice TL</p>
+                <p class="card-text"><b>Stok Adedi: </b>@Model.UnitsInStock</p>
+            </div>
+
+            <!-- Yıldızlı Puanlama -->
+            <div>
+                @if (Model.CommentViewModels.Any())
+                {
+                    <p>
+                        <b>Değerlendirme: </b>
+                        @foreach (var i in Enumerable.Range(1, 5))
+                        {
+                            <i class="fa @((i <= Model.CommentViewModels.Average(c => c.Rating)) ? "fa-star filled" : "fa-star-o")"></i>
+                        }
+                        (@Model.CommentViewModels.Count() yorum)
+                    </p>
+                }
+                else
+                {
+                    <p><b>Değerlendirme: </b>Henüz yorum yapılmamış.</p>
+                }
+            </div>
+
+        @if (User.IsLogged())
+        {
+            <div>
+                <form asp-action="AddToBasket" asp-controller="ShoppingBasket" asp-route-userId="@User.GetId()" asp-route-productId="@Model.Id" method="post" style="display: inline-block; margin-right: 10px;">
+                    <button type="submit" class="btn btn-warning">Sepete Ekle</button>
+                </form>
+
+                @{
+                    var commentedProduct = comments.FirstOrDefault(x => x.UserId == User.GetId() && x.ProductId == @Model.Id);
+                }
+                @if (commentedProduct == null)
+                {
+                    <form asp-action="CommentProduct" asp-controller="Product"  method="get" style="display: inline-block; margin-right: 10px;">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <input type="hidden" name="userId" value=@User.GetId() />
+                        <button type="submit" class="btn btn-warning">Yorum yap</button>
+
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="DeleteComment" asp-controller="Product" method="post" style="display: inline-block; margin-right: 10px;">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <input type="hidden" name="userId" value="@User.GetId()" />
+                        <button type="submit" class="btn btn-warning">Yorum Sil</button>
+                    </form>
+                }
+
+
+                @{
+                    var likedProducts = likes.FirstOrDefault(x => x.UserId == User.GetId() && x.ProductId == @Model.Id);
+                }
+                @if (likedProducts == null)
+                {
+                    <form asp-action="LikeProduct" asp-controller="Product" asp-route-productId="@Model.Id" asp-route-userId="@User.GetId()" method="post" style="display: inline-block; ">
+                        <button type="submit"><i class="fa-regular fa-heart">@Model.LikeCount</i> </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="LikeProduct" asp-controller="Product" asp-route-productId="@Model.Id" asp-route-userId="@User.GetId()" method="post" style="display: inline-block;">
+                        <button type="submit"><i class="fa-solid fa-heart">@Model.LikeCount</i> </button>
+                    </form>
+                }
+
+             
+            </div>
+        }
+           
+        </div>
+    </div>
+</div>
+
+<!-- Yorumlar Bölümü (Yeni düzenleme) -->
+<div class="comments-section ms-2">
+    <h4 class="comments-title">Yorumlar</h4>
+    @if (Model.CommentViewModels != null && Model.CommentViewModels.Any())
+    {
+        @foreach (var comment in Model.CommentViewModels)
+        {
+            <div class="comment-item">
+                <p><strong>Değerlendirme Puanı:</strong> @comment.Rating</p>
+                <p>@comment.Content</p>  <!-- Yorum İçeriği -->
+                <p class="anonymous">Anonim Kullanıcı</p>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Henüz yorum yapılmamış.</p>
+    }
+</div>
